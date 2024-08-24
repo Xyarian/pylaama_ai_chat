@@ -1,6 +1,6 @@
 # PyLaama AI Chat
 
-**PyLaama AI Chat** is an interactive **chat interface** built with [Streamlit](https://streamlit.io/), designed to harness the power of Large Language Models (LLMs) for AI-driven conversations. The application leverages [Ollama](https://ollama.ai/) to run various LLM models locally, with default support for [Meta Llama 3.1 8B](https://llama.meta.com/) *(default model)* and [Google Gemma 2 9B](https://ai.google.dev/gemma) models to provide intelligent, context-aware responses.
+**PyLaama AI Chat** is an interactive **chat interface** built with [Streamlit](https://streamlit.io/), designed to harness the power of Large Language Models (LLMs) for AI-driven conversations. The application leverages [Ollama](https://ollama.ai/) to run various LLM models **locally**, with default support for [Meta Llama 3.1 8B](https://llama.meta.com/) *(default model)* and [Google Gemma 2 9B](https://ai.google.dev/gemma) models to provide intelligent, context-aware responses.
 
 ## Features
 
@@ -92,7 +92,7 @@ streamlit run laama_chat.py
 
 ## Customizing AI Models
 
-PyLaama AI Chat uses Ollama to run LLM models locally. By default, it supports Llama 3.1 and Gemma 2, but you can easily add support for any model available in Ollama:
+PyLaama AI Chat uses Ollama to run LLM models **locally**. By default, it supports Llama 3.1 and Gemma 2, but you can easily add support for any model available in Ollama:
 
 1. Pull the desired model using Ollama:
 
