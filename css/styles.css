@@ -1,0 +1,66 @@
+/* 
+* styles.css
+* Custom CSS for the Streamlit Laama Chat application.
+*/ 
+.stApp {
+    background-size: cover;
+    background-position: center;
+    opacity: 0.9;
+}
+
+.stApp::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(14, 17, 23, 0.9);
+    z-index: -1;
+}
+
+/* Style the decoration element */
+#stDecoration {
+    background: rgb(148, 0, 255);
+    background: linear-gradient(90deg, rgba(148, 0, 255, 1) 0%, rgba(0, 255, 148, 1) 100%);
+}
+
+.stDeployButton {
+    visibility:  hidden !important;
+}
+
+/* Replace the default menu with a hamburger menu */
+#MainMenu {
+    visibility: hidden;
+    position: relative;
+}
+
+/* Add the hamburger icon in the correct position */
+#MainMenu::before {
+    cursor: pointer;
+    content: "\2630"; /* Unicode for hamburger menu */
+    font-size: 1.4em;
+    visibility: visible;
+    position: absolute; /* Position the icon absolutely within the container */
+    top: 50%; /* Center vertically */
+    right: 3px;
+    transform: translateY(-50%); /* Adjust for vertical centering */
+    transition: background-color 0.1s, color 0.1s; /* transition for color and background change */
+    padding: 8px; /* Add padding to create space around the icon */
+    border-radius: 8px; /* Rounded corners for the background */
+    box-sizing: border-box;
+}
+
+/* Change background and text color on hover */
+#MainMenu:hover::before {
+    background-color: #262730;
+    color: #ffffff;
+}
+
+.st-b7 {
+    /*background-color: rgba(38, 39, 48, 0.3);*/
+    background-color: rgba(19, 23, 32, 0.1) !important;
+    /*border: 1px solid rgba(250, 250, 250, 0.2);
+    border-radius: 0.5rem;*/
+}
+

@@ -1,0 +1,19 @@
+# Ignore directories
+__pycache__/
+.venv/
+test/
+tests/
+
+# Ignore files
+.env
+chats.db
+
+# Ignore everything in .streamlit
+.streamlit/*
+# But don't ignore config.toml
+!.streamlit/config.toml
+
+# Ignore everything in auth
+auth/*
+# But don't ignore config.yaml.example
+!auth/config.yaml.example
