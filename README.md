@@ -138,6 +138,17 @@ See `requirements.txt` for a list of Python dependencies.
 
 ### Screenshots
 
+![Screenshot 1](https://github.com/user-attachments/assets/36f0168e-ccf0-43c7-8862-3fa54d4dd2cc)
+
+![Screenshot 2](https://github.com/user-attachments/assets/52ec8457-2dab-4412-8bcf-f31ad5c7e42e)
+
+![Screenshot 3](https://github.com/user-attachments/assets/d374508c-4146-41fa-af5c-1512efcdd7eb)
+
+![Screenshot 4](https://github.com/user-attachments/assets/f5e2d863-30c9-4f01-ab07-f78f2fceda22)
+
+![Screenshot 5](https://github.com/user-attachments/assets/8292cffd-9ec7-4004-add4-2d7da7063240)
+
+![Screenshot 6](https://github.com/user-attachments/assets/66855a0e-e429-4ec0-a237-1cf45b12a74a)
 
 ### License
 
