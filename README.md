@@ -108,11 +108,12 @@ For a list of available models and their capabilities, visit [Ollama's model lib
 ## Project Structure
 
 ```
-laama_chat /
+pylaama_ai_chat /
 ├── .streamlit/
 │   └── config.toml
+│   └── secrets.toml(.example)
 ├── auth/
-│   └── config.yaml
+│   └── config.yaml(.example)
 ├── css/
 │   └── styles.css
 ├── files/
