@@ -1,4 +1,5 @@
 """ 
+laama_chat.py
 PyLaama AI Chat - A Streamlit based app for chatting with the AI LLM models
 """
 import streamlit as st
@@ -9,12 +10,47 @@ import ollama
 import base64
 import pdfplumber
 from docx import Document
-# SQLite database functions (comment out to use PostgreSQL)
-from chats_db_sqlite import create_database, save_chat, load_chats, load_chat_messages, delete_chat, save_user_preference, get_user_preference
-# PostgreSQL database functions (uncomment to use PostgreSQL)
-# from chats_db_postgres import create_database, save_chat, load_chats, load_chat_messages, delete_chat, save_user_preference, get_user_preference
 import logging
 import datetime as dt
+# Database configuration
+DB_TYPE = "sqlite"  # Change this to "postgres" or "postgres_encrypted" as needed
+# Database imports based on configuration
+try:
+    if DB_TYPE == "sqlite":
+        from chats_db_sqlite import (
+            create_database,
+            save_chat,
+            load_chats,
+            load_chat_messages,
+            delete_chat,
+            save_user_preference,
+            get_user_preference
+        )
+    elif DB_TYPE == "postgres":
+        from chats_db_postgres import (
+            create_database,
+            save_chat,
+            load_chats,
+            load_chat_messages,
+            delete_chat,
+            save_user_preference,
+            get_user_preference
+        )
+    elif DB_TYPE == "postgres_encrypted":
+        from chats_db_postgres_enc import (
+            create_database,
+            save_chat,
+            load_chats,
+            load_chat_messages,
+            delete_chat,
+            save_user_preference,
+            get_user_preference
+        )
+    else:
+        raise ValueError(f"Invalid DB_TYPE: {DB_TYPE}. Choose 'sqlite', 'postgres', or 'postgres_encrypted'.")
+except ImportError as e:
+    st.error(f"Failed to import database module for {DB_TYPE}: {e}")
+    st.stop()
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -349,9 +385,6 @@ def main():
             st.session_state['preferred_model'] = get_user_preference(st.session_state['username'])
             logger.info(f"Init: User '{st.session_state['username']}' prefers model '{st.session_state['preferred_model']}'")
 
-        # Get the user's preferred model
-        #current_model = get_user_preference(st.session_state['username'])
-
         # Check if the account page should be shown
         if 'show_account_page' not in st.session_state:
             st.session_state['show_account_page'] = False
@@ -364,7 +397,7 @@ def main():
             col1, col2 = st.sidebar.columns(2)
             with col1:
                 if not st.session_state['show_account_page']:
-                    if st.button('👤 Account', help='Access the user account settings page', use_container_width=True):
+                    if st.button('⚙️ Settings', help='Access the user account settings page', use_container_width=True):
                         st.session_state['show_account_page'] = True
                 else:
                     if st.button('🤖 Chat View', help='Switch back to the main chat interface', use_container_width=True):

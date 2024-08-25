@@ -10,8 +10,10 @@ chats.db
 
 # Ignore everything in .streamlit
 .streamlit/*
-# But don't ignore config.toml
+# But don't ignore config.toml 
 !.streamlit/config.toml
+# And don't ignore secrets.toml.example
+!.streamlit/secrets.toml.example
 
 # Ignore everything in auth
 auth/*

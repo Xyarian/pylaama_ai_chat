@@ -7,9 +7,10 @@
 - 🤖 **Interactive AI Chat**: Chat interface for dynamic conversations with sophisticated AI models
 - 🔄 **Model Flexibility**: Easily switch between different LLM models supported by Ollama
 - 📄 **Document Context**: Document upload support to provide additional context for more informed AI responses
-- 💾 **Session Management**: Save, load, and manage multiple chat sessions for continuity and reference (SQLite or PostgreSQL)
+- 💾 **Session Management**: Save, load, and manage multiple chat sessions for continuity and reference
 - 👤 **Multi-User Support**: Basic authentication system allowing multiple users to maintain separate chat histories and preferences
 - 🎨 **User-Friendly Interface**: Custom-styled Streamlit-powered UI for interaction
+- 🛠️ **Database Handling**: Custom database action functions implemented for SQLite and PostgreSQL, independent of Streamlit's `st.connection`, keeping portability across platforms
 
 **PyLaama AI Chat** combines cutting-edge AI technology with practical features, making it ideal for **learning, and exploration** in the realm of Artificial Intelligence and Natural Language Processing (NLP).
 
@@ -19,7 +20,7 @@
 
 - Python
 - Ollama
-- *Optional: PostgreSQL (default: SQLite)*
+- *Optional: PostgreSQL for advanced database functionality; SQLite is used by default*
 
 [![Python Version](https://img.shields.io/badge/Python-3.12.5-yellow)](https://www.python.org/downloads/)
 [![Ollama Version](https://img.shields.io/badge/Ollama-0.3.5-green)](https://ollama.ai)
@@ -116,6 +117,7 @@ laama_chat /
 │   └── styles.css
 ├── files/
 │   └── bg_image.png
+├── chats_db_postgres_enc.py
 ├── chats_db_postgresql.py
 ├── chats_db_sqlite3.py
 ├── laama_chat.py

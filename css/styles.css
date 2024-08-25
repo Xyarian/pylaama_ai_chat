@@ -1,6 +1,6 @@
 /* 
 * styles.css
-* Custom CSS for the Streamlit Laama Chat application.
+* Custom CSS for the Streamlit PyLaama AI Chat application.
 */ 
 .stApp {
     background-size: cover;
@@ -56,11 +56,3 @@
     background-color: #262730;
     color: #ffffff;
 }
-
-.st-b7 {
-    /*background-color: rgba(38, 39, 48, 0.3);*/
-    background-color: rgba(19, 23, 32, 0.1) !important;
-    /*border: 1px solid rgba(250, 250, 250, 0.2);
-    border-radius: 0.5rem;*/
-}
-
