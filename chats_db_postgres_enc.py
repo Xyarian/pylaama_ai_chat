@@ -18,7 +18,7 @@ from sqlalchemy.sql import func
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("chats_db_postgres_enc")
 
-# Get PostgreSQL connection details from Streamlit secrets
+# Get PostgreSQL connection details from Streamlit secrets in .streamlit/secrets.toml
 pg_config = st.secrets.connections.postgresql.enc
 
 # Database connection URL
