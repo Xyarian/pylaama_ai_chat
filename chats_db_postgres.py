@@ -16,8 +16,11 @@ from functools import wraps
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("chats_db_postgres")
 
-# Database connection URL from Streamlit secrets in .streamlit/secrets.toml or environment variables
-DATABASE_URL = f"postgresql://{st.secrets.connections.postgresql.username}:{st.secrets.connections.postgresql.password}@{st.secrets.connections.postgresql.host}:{st.secrets.connections.postgresql.port}/{st.secrets.connections.postgresql.database}"
+# Get PostgreSQL connection details from Streamlit secrets in .streamlit/secrets.toml
+pg_config = st.secrets.connections.postgresql
+
+# Database connection URL
+DATABASE_URL = f"postgresql://{pg_config.username}:{pg_config.password}@{pg_config.host}:{pg_config.port}/{pg_config.database}"
 
 # Create SQLAlchemy engine
 engine = create_engine(DATABASE_URL)

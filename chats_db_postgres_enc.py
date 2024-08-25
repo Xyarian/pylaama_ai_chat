@@ -18,11 +18,14 @@ from sqlalchemy.sql import func
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("chats_db_postgres_enc")
 
-# Database connection URL from Streamlit secrets in .streamlit/secrets.toml or environment variables
-DATABASE_URL = f"postgresql://{st.secrets.connections.postgresql.enc.username}:{st.secrets.connections.postgresql.enc.password}@{st.secrets.connections.postgresql.enc.host}:{st.secrets.connections.postgresql.enc.port}/{st.secrets.connections.postgresql.enc.database}"
+# Get PostgreSQL connection details from Streamlit secrets
+pg_config = st.secrets.connections.postgresql.enc
 
-# SECRET (!) encryption key from Streamlit secrets in .streamlit/secrets.toml or environment variables
-encryption_key = st.secrets.connections.postgresql.enc.key
+# Database connection URL
+DATABASE_URL = f"postgresql://{pg_config.username}:{pg_config.password}@{pg_config.host}:{pg_config.port}/{pg_config.database}"
+
+# SECRET(!) encryption key
+encryption_key = pg_config.key
 
 # Create SQLAlchemy engine
 engine = create_engine(DATABASE_URL)
