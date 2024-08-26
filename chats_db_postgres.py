@@ -73,103 +73,89 @@ def create_database():
 @retryable_query
 def save_chat(username, chat_name, messages):
     """Save a chat of a specific user with the given name and messages."""
-    try:
-        session = Session()
-        new_chat = Chat(username=username, chat_name=chat_name, messages=json.dumps(messages))
-        session.add(new_chat)
-        session.commit()
-        logger.info(f"Chat '{chat_name}' saved successfully for user '{username}'")
-    except SQLAlchemyError as e:
-        logger.error(f"Error saving chat: {e}")
-        session.rollback()
-        raise
-    finally:
-        session.close()
+    with Session() as session:
+        with session.begin():
+            try:
+                new_chat = Chat(username=username, chat_name=chat_name, messages=json.dumps(messages))
+                session.add(new_chat)
+                logger.info(f"Chat '{chat_name}' saved successfully for user '{username}'")
+            except SQLAlchemyError as e:
+                logger.error(f"Error saving chat: {e}")
+                raise
 
 @retryable_query
 def load_chats(username):
     """Load all chats for a specific user from the database."""
-    try:
-        session = Session()
-        chats = session.query(Chat.id, Chat.chat_name, Chat.username).filter(Chat.username == username).all()
-        logger.info(f"Successfully loaded {len(chats)} chats for user '{username}'")
-        return chats
-    except SQLAlchemyError as e:
-        logger.error(f"Error loading chats: {e}")
-        raise
-    finally:
-        session.close()
+    with Session() as session:
+        try:
+            chats = session.query(Chat.id, Chat.chat_name, Chat.username).filter(Chat.username == username).all()
+            logger.info(f"Successfully loaded {len(chats)} chats for user '{username}'")
+            return chats
+        except SQLAlchemyError as e:
+            logger.error(f"Error loading chats: {e}")
+            raise
 
 @retryable_query
 def load_chat_messages(chat_id, username):
     """Load messages for a specific chat by ID for a specific user."""
-    try:
-        session = Session()
-        chat = session.query(Chat).filter(Chat.id == chat_id, Chat.username == username).first()
-        if chat:
-            messages = json.loads(chat.messages)
-            logger.info(f"Successfully loaded messages for chat ID {chat_id} for user '{username}'")
-            return True, messages
-        else:
-            logger.warning(f"No chat found with id: {chat_id} for user '{username}'")
-            return False, None
-    except SQLAlchemyError as e:
-        logger.error(f"Error loading chat messages: {e}")
-        raise
-    finally:
-        session.close()
+    with Session() as session:
+        try:
+            chat = session.query(Chat).filter(Chat.id == chat_id, Chat.username == username).first()
+            if chat:
+                messages = json.loads(chat.messages)
+                logger.info(f"Successfully loaded messages for chat ID {chat_id} for user '{username}'")
+                return True, messages
+            else:
+                logger.warning(f"No chat found with id: {chat_id} for user '{username}'")
+                return False, None
+        except SQLAlchemyError as e:
+            logger.error(f"Error loading chat messages: {e}")
+            raise
 
 @retryable_query
 def delete_chat(chat_id, username):
     """Delete a chat by ID for a specific user."""
-    try:
-        session = Session()
-        chat = session.query(Chat).filter(Chat.id == chat_id, Chat.username == username).first()
-        if chat:
-            session.delete(chat)
-            session.commit()
-            logger.info(f"Chat with ID {chat_id} deleted successfully for user '{username}'")
-        else:
-            logger.warning(f"No chat found with id: {chat_id} for user '{username}'")
-    except SQLAlchemyError as e:
-        logger.error(f"Error deleting chat: {e}")
-        session.rollback()
-        raise
-    finally:
-        session.close()
+    with Session() as session:
+        with session.begin():
+            try:
+                chat = session.query(Chat).filter(Chat.id == chat_id, Chat.username == username).first()
+                if chat:
+                    session.delete(chat)
+                    logger.info(f"Chat with ID {chat_id} deleted successfully for user '{username}'")
+                else:
+                    logger.warning(f"No chat found with id: {chat_id} for user '{username}'")
+            except SQLAlchemyError as e:
+                logger.error(f"Error deleting chat: {e}")
+                raise
 
 @retryable_query
 def save_user_preference(username, preferred_model):
     """Save or update a user's preferred model."""
-    try:
-        session = Session()
-        preference = session.query(UserPreference).filter(UserPreference.username == username).first()
-        if preference:
-            preference.preferred_model = preferred_model
-        else:
-            preference = UserPreference(username=username, preferred_model=preferred_model)
-            session.add(preference)
-        session.commit()
-        logger.info(f"Preference saved for user '{username}': model '{preferred_model}'")
-    except SQLAlchemyError as e:
-        logger.error(f"Error saving user preference: {e}")
-        session.rollback()
-        raise
-    finally:
-        session.close()
+    with Session() as session:
+        with session.begin():
+            try:
+                preference = session.query(UserPreference).filter(UserPreference.username == username).first()
+                if preference:
+                    preference.preferred_model = preferred_model
+                else:
+                    preference = UserPreference(username=username, preferred_model=preferred_model)
+                    session.add(preference)
+                logger.info(f"Preference saved for user '{username}': model '{preferred_model}'")
+            except SQLAlchemyError as e:
+                logger.error(f"Error saving user preference: {e}")
+                raise
 
 @retryable_query
 def get_user_preference(username):
     """Get a user's preferred model."""
-    try:
-        session = Session()
-        preference = session.query(UserPreference).filter(UserPreference.username == username).first()
-        if preference:
-            return preference.preferred_model
-        else:
-            return 'llama3.1'  # Default model if not set
-    except SQLAlchemyError as e:
-        logger.error(f"Error getting user preference: {e}")
-        raise
-    finally:
-        session.close()
+    with Session() as session:
+        try:
+            preference = session.query(UserPreference).filter(UserPreference.username == username).first()
+            if preference:
+                return preference.preferred_model
+            else:
+                return 'llama3.1'  # Default model if not set
+        except SQLAlchemyError as e:
+            logger.error(f"Error getting user preference: {e}")
+            raise
+        

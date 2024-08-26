@@ -12,6 +12,11 @@ import pdfplumber
 from docx import Document
 import logging
 import datetime as dt
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("laama_chat")
+
 # Database configuration
 DB_TYPE = "sqlite"  # Change this to "postgres" or "postgres_encrypted" as needed
 # Database imports based on configuration
@@ -49,12 +54,9 @@ try:
     else:
         raise ValueError(f"Invalid DB_TYPE: {DB_TYPE}. Choose 'sqlite', 'postgres', or 'postgres_encrypted'.")
 except ImportError as e:
-    st.error(f"Failed to import database module for {DB_TYPE}: {e}")
+    logging.error(f"Failed to import database module for {DB_TYPE}: {e}")
+    st.error(f"Failed to import database module. Please check the logs for more information.")
     st.stop()
-
-# Set up logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("laama_chat")
 
 # Set page title, favicon, layout, etc.
 st.set_page_config(
@@ -77,7 +79,7 @@ except FileNotFoundError:
     st.stop()
 except Exception as e:
     logger.error(f"Error loading configuration: {e}")
-    st.error(f"Error loading configuration: {e}")
+    st.error(f"Error loading configuration. Please check the logs for more information.")
     st.stop()
 
 # Pre-hashing all plain text passwords once
@@ -133,7 +135,8 @@ def register_tab():
                 with open('auth/config.yaml', 'w') as file:
                     yaml.dump(config, file, default_flow_style=False)
             except Exception as e:
-                st.error(f"Error saving configuration: {e}")
+                logging.error(f"Error saving configuration: {e}")
+                st.error(f"Error saving configuration. Please check the logs for more information.")
 
     except Exception as e:
         st.error(e)
@@ -169,7 +172,8 @@ def account_page():
                     yaml.dump(config, file, default_flow_style=False)
                 st.success('Password modified successfully')
             except Exception as e:
-                st.error(f"Error saving configuration: {e}")
+                logging.error(f"Error saving configuration: {e}")
+                st.error(f"Error saving configuration. Please check the logs for more information.")
     except Exception as e:
         st.error(e)
 
@@ -184,7 +188,8 @@ def account_page():
                     yaml.dump(config, file, default_flow_style=False)
                 st.success('User details updated successfully')
             except Exception as e:
-                st.error(f"Error saving configuration: {e}")
+                logging.error(f"Error saving configuration: {e}")
+                st.error(f"Error saving configuration. Please check the logs for more information.")
     except Exception as e:
         st.error(e)
 
@@ -215,7 +220,8 @@ def extract_text(file, file_type):
             st.error("Unsupported file type.")
             return ""
     except Exception as e:
-        st.error(f"Error reading file: {e}")
+        logging.error(f"Error reading file: {e}")
+        st.error(f"Error reading file. Please check the logs for more information.")
         return ""
 
 def extract_text_from_docx(file):
@@ -225,7 +231,8 @@ def extract_text_from_docx(file):
         text = '\n'.join([para.text for para in doc.paragraphs])
         return text
     except Exception as e:
-        st.error(f"Error extracting text from DOCX: {e}")
+        logging.error(f"Error extracting text from DOCX: {e}")
+        st.error(f"Error extracting text from DOCX. Please check the logs for more information.")
         return ""
 
 def extract_text_from_pdf(file):
@@ -241,7 +248,8 @@ def extract_text_from_pdf(file):
                     st.warning("Some pages may not contain extractable text.")
         return text
     except Exception as e:
-        st.error(f"Error extracting text from PDF: {e}")
+        logging.error(f"Error extracting text from PDF: {e}")
+        st.error(f"Error extracting text from PDF. Please check the logs for more information.")
         return ""
 
 def get_ai_response(messages):
@@ -319,7 +327,8 @@ def load_saved_chats():
     try:
         return load_chats(st.session_state["username"])
     except Exception as e:
-        st.error(f"Error loading chats: {e}")
+        logging.error(f"Error loading chats: {e}")
+        st.error(f"Error loading chats. Please check the logs for more information.")
         return []
 
 def delete_chat_callback(chat_id, chat_name):
@@ -329,7 +338,8 @@ def delete_chat_callback(chat_id, chat_name):
         st.session_state.saved_chats = load_saved_chats()
         st.toast(f"Successfully deleted chat ***{chat_name}***.", icon="🗑️")
     except Exception as e:
-        st.error(f"Error deleting chat: {e}")
+        logging.error(f"Error deleting chat: {e}")
+        st.error(f"Error deleting chat. Please check the logs for more information.")
 
 @st.cache_resource
 def initialize_database():
@@ -374,7 +384,8 @@ def main():
             try:
                 st.session_state.saved_chats = load_saved_chats()
             except Exception as e:
-                st.error(f"Error loading chats: {e}")
+                logging.error(f"Error loading chats: {e}")
+                st.error(f"Error loading chats. Please check the logs for more information.")
                 st.session_state.saved_chats = []
         else:
             # Refresh saved chats on each run to ensure up-to-date data
@@ -462,7 +473,8 @@ def main():
                                 else:
                                     st.toast(f"Chat ***{chat_name}*** has been loaded but contains no messages.", icon="ℹ️")
                         except Exception as e:
-                            st.error(f"Error loading chat messages: {e}")
+                            logging.error(f"Error loading chat messages: {e}")
+                            st.error(f"Error loading chat messages. Please check the logs for more information.")
                 with col2:
                     if st.button("🗑️", help="Delete the saved chat", key=f"delete_{chat_id}", on_click=delete_chat_callback, args=(chat_id, chat_name)):
                         pass
@@ -491,13 +503,16 @@ def main():
             # File uploader for adding files to the chat context
             uploaded_file = st.file_uploader("Upload a file", type=["pdf", "docx", "txt", "bat", "cmd", "sh", "py",])
             if uploaded_file is not None:
-                file_content = extract_text(uploaded_file, uploaded_file.type)
-
-                if file_content:
-                    st.session_state['messages'].append({"role": "system", "content": file_content})
-                    st.success("File content added to context.")
-                else:
-                    st.warning("The file appears to be empty or unreadable.")
+                try:
+                    file_content = extract_text(uploaded_file, uploaded_file.type)
+                    if file_content:
+                        st.session_state['messages'].append({"role": "system", "content": file_content})
+                        st.success("File content added to context.")
+                    else:
+                        st.warning("The file appears to be empty or unreadable.")
+                except Exception as e:
+                    logger.error(f"Error processing uploaded file: {e}")
+                    st.error("An error occurred while processing the file. Please try a different file or format.")
 
             # Display chat messages from history on app rerun
             for message in st.session_state['messages']:
